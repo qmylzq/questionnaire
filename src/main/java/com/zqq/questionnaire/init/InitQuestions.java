@@ -26,7 +26,6 @@ public class InitQuestions implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         String file_path = "E:\\ideaIU\\tomcat\\apache-tomcat-8.5.50\\webapps\\proj\\questionnaire\\questionnaire\\src\\main\\resources\\mapping_file";
-        // String file_path = "C:\\Users\\17469\\Desktop\\程序猿啊\\wzz\\questionnaire\\src\\main\\resources\\mapping_file";
         File file = new File(file_path);
         // 读取txt文件，将 group 数据存到 list 里
         BufferedReader br = null;
