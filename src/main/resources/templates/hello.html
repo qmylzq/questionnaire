@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <title>JOSN test</title>
 </head>
 <body>
-<a href="/question/paper">点击获取问卷</a>
-<a href="http://127.0.0.1:84">点击访问本地服务器</a>
+<form action="/answer/showByworker" method="post">
+    workerId：<input type="text" name="worker_id"> <br/>
+    <input type="submit" value="根据问卷Id查看结果">
+</form>
+<form action="/answer/showByCategory" method="post">
+    Category：<input type="text" name="categoryName" > <br/>
+    <input type="submit" value="根据家居系列查看结果">
+</form>
 </body>
 </html>

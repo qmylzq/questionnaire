@@ -13,7 +13,8 @@ public class PageController implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/index").setViewName("index.html");
-        registry.addViewController("/hello").setViewName("../templates/hello.html");
+        registry.addViewController("/result").setViewName("../templates/hello.html");
+
     }
 }
 

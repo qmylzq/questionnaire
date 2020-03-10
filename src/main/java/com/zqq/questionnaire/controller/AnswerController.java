@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -96,5 +97,13 @@ public class AnswerController {
             resData.put("code", "wrong parameter");
             return resData;
         }
+    }
+    @RequestMapping(value = "/showByworker", method = RequestMethod.POST)
+    public List<Answer> showByWorkerId(HttpServletRequest request) {
+        return answerService.showByWorkerId(Long.parseLong(request.getParameter("worker_id")));
+    }
+    @RequestMapping(value="/showByCategory",method = RequestMethod.POST)
+    public List<Answer> showByCategory(HttpServletRequest request){
+        return answerService.showByCategory(request.getParameter("categoryName"));
     }
 }
