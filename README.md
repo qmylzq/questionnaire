@@ -12,5 +12,9 @@
 （1）直接打开IDEA open本地项目，按照pom.xml导入依赖
 （2）需要在本地创建数据库，以及对应数据表
 （3）可以运行试试，可能不可避免会有文件路径不对的问题
-#### 这是本地压力测试的视频
+### 本地压力测试
 [JMeter压力测试](https://www.bilibili.com/video/av94782753)
+### JPA结果统计
+在hello.html里面添加问卷号或系列名称，向后台发送两个请求
+（1）/answer/showByWorkerId根据问卷号查询结果
+（2）/answer/showByCategory根据系列名称查询结果
