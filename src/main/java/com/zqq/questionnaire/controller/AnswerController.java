@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -24,6 +21,7 @@ public class AnswerController {
     private IAnswerService answerService;
     private ICodeService codeService;
     private final Base64.Encoder base64Encoder = Base64.getEncoder();
+    private final Base64.Decoder base64Decoder = Base64.getDecoder();
 
     @Autowired
     public void setAnswerService(IAnswerService answerService) {
@@ -86,7 +84,7 @@ public class AnswerController {
                 Long timestamp = System.currentTimeMillis();
                 String code = String.format("%s#%d#%d", ip, workerId, timestamp);
                 code = base64Encoder.encodeToString(code.getBytes(StandardCharsets.UTF_8));
-                System.out.println("生成的 code： " + code);
+                System.out.println("编码code：" + code);
                 codeService.saveCode(workerId, code);
                 resData.put("isRepeated", false);
                 resData.put("code", code);
@@ -105,5 +103,15 @@ public class AnswerController {
     @RequestMapping(value="/showByCategory",method = RequestMethod.POST)
     public List<Answer> showByCategory(HttpServletRequest request){
         return answerService.showByCategory(request.getParameter("categoryName"));
+    }
+    @RequestMapping(value = "/showByCode",method = RequestMethod.POST)
+    public List<Answer> showByCode(HttpServletRequest request){
+        String code=request.getParameter("Code");
+        byte[] codeBytes=base64Decoder.decode(code);
+        String s=new String();
+        for(byte b:codeBytes)s+=(char)b;
+        String[] strings=s.split("#");
+        System.out.println("问卷ip："+strings[0]+"问卷编号："+strings[1]);
+        return answerService.showByWorkerId(Long.parseLong(strings[1]));
     }
 }
