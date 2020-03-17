@@ -42,11 +42,7 @@ server:
   port: 8888
 
 access:
-#  url: http://127.0.0.1:84
-#  bgURLf: bg/%d.jpg
-#  fgURLf: fg/%d.jpg
-#  tnURLf: thumbnail/%d.png
-  url: http://47.100.226.85/questionnaire/
-  bgURLf: pics/bg/%d.jpg
-  fgURLf: pics/fg/%d.jpg
-  tnURLf: pics/thumbnail/%d.png
+  url: http://127.0.0.1:84
+  bgURLf: bg/%d.jpg
+  fgURLf: fg/%d.jpg
+  tnURLf: thumbnail/%d.png

@@ -25,3 +25,10 @@
 （1）/answer/showByWorkerId根据问卷号查询结果
 
 （2）/answer/showByCategory根据系列名称查询结果
+### 编解码
+在hello.jtml里面添加用户提供的Verify_code，向后台发送查询请求：
+如果直接将编码值作为索引，查询非常艰难。
+
+采取先解码后查询的思路
+
+（1）/answer/showByCode根据用户提交的编码查询结果
