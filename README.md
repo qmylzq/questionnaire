@@ -19,7 +19,7 @@
 
 ### 本地压力测试
 [JMeter压力测试](https://www.bilibili.com/video/av94782753)
-### JPA结果统计
+### Spring-data-JPA结果统计
 在hello.html里面添加问卷号或系列名称，向后台发送两个请求
 
 （1）/answer/showByWorkerId根据问卷号查询结果
@@ -32,3 +32,10 @@
 采取先解码后查询的思路
 
 （1）/answer/showByCode根据用户提交的编码查询结果
+### 使用redis缓存减少数据库IO
+有两处改动
+
+（1）原本/answer/add向数据库写入一条answer变成redis写入一条记录
+
+（2）原本/answer/code向数据库插入一条code，变成从缓存中取10条数据写入数据库
+
