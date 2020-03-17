@@ -11,4 +11,5 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
     List<Answer> findByWorkerId(long workerId);
     List<Answer> findByCategory(String categoryName);
+
 }

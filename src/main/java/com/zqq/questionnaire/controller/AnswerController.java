@@ -1,16 +1,25 @@
 package com.zqq.questionnaire.controller;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.zqq.questionnaire.pojo.Answer;
 import com.zqq.questionnaire.service.IAnswerService;
 import com.zqq.questionnaire.service.ICodeService;
 import com.zqq.questionnaire.util.GeneralUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @RestController
@@ -33,6 +42,11 @@ public class AnswerController {
         this.codeService = codeService;
     }
 
+    @Resource
+    public RedisTemplate<Integer,Object> redisTemplate;
+
+    private static final AtomicInteger n =new AtomicInteger(0);
+
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String saveAnswer(@RequestBody HashMap<String, String> data, HttpServletRequest request) {
         log.info("/answer/add 收到参数：" + data.toString());
@@ -50,8 +64,10 @@ public class AnswerController {
         res.setFgIndex(fgIndex);
         res.setAnswer(answer);
         res.setDuration(duration);
-        try {//向数据表中插入一条记录
-            answerService.insertOne(res);
+        try {//答案先放入缓存，然后批量写入数据库
+//            answerService.insertOne(res);
+            redisTemplate.boundValueOps(n.incrementAndGet()).set(res);
+            System.out.println(redisTemplate.boundValueOps(n.get()).get());
         } catch (Exception e) {
             log.info("保存失败");
             log.error("保存答案请求失败");
@@ -67,6 +83,18 @@ public class AnswerController {
         log.info("from: " + GeneralUtil.getIpAddr(request));
         Map<String, Object> resData = new HashMap<>();
         try {
+            //重新开启一个线程把redis的数据批量写入数据库
+            for(int num=0;num<10;num++){
+                synchronized (n){
+                    if(n.get()>0){
+                        answerService.insertOne((Answer)redisTemplate.boundValueOps(n.get()).get());
+                        //并删除这条数据的缓存
+                        redisTemplate.delete(n.get());
+                        n.decrementAndGet();
+                    }
+                }
+            }
+            //生成code
             Long workerId = Long.parseLong(data.get("sheetIndex"));
             System.out.println("workerId = " + workerId);
             String preCode = codeService.getCodeByWorkerId(workerId);
